@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concrete Beats Clever — RyanrealAF</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e0c0a;
+    --paper: #f0ece3;
+    --warm: #c8a96e;
+    --rust: #b85c38;
+    --ash: #6b6460;
+    --ghost: #d4cfc6;
+    --cement: #3a3530;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.45;
+    mix-blend-mode: overlay;
+  }
+
+  /* HEADER / HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 6vw 8vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 30%, rgba(200, 169, 110, 0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(184, 92, 56, 0.08) 0%, transparent 60%),
+      linear-gradient(175deg, #1a1712 0%, #0e0c0a 50%, #090807 100%);
+  }
+
+  .hero-alley-light {
+    position: absolute;
+    top: -10%;
+    right: 8%;
+    width: 3px;
+    height: 70%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(200,169,110,0.6) 20%, rgba(200,169,110,0.15) 70%, transparent 100%);
+    filter: blur(8px);
+    animation: flicker 4s ease-in-out infinite;
+  }
+
+  .hero-alley-light::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(200,169,110,0.25) 0%, transparent 70%);
+    filter: blur(20px);
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    47% { opacity: 1; }
+    48% { opacity: 0.7; }
+    49% { opacity: 1; }
+    85% { opacity: 1; }
+    86% { opacity: 0.8; }
+    87% { opacity: 1; }
+  }
+
+  .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--warm);
+    opacity: 0.7;
+    margin-bottom: 1.2rem;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.5rem, 14vw, 13rem);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    position: relative;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.4s;
+    opacity: 0;
+  }
+
+  .hero-title span {
+    display: block;
+    color: var(--warm);
+  }
+
+  .hero-title .title-stroke {
+    -webkit-text-stroke: 2px var(--paper);
+    color: transparent;
+  }
+
+  .hero-byline {
+    margin-top: 2.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.7s;
+    opacity: 0;
+  }
+
+  .hero-byline-line {
+    height: 1px;
+    width: 60px;
+    background: var(--warm);
+    opacity: 0.5;
+  }
+
+  .hero-byline-text {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+
+  .hero-tagline {
+    margin-top: 0.8rem;
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--warm);
+    opacity: 0.85;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.9s;
+    opacity: 0;
+    max-width: 520px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-cue {
+    position: absolute;
+    bottom: 3vh;
+    left: 6vw;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 1.2s;
+    opacity: 0;
+  }
+
+  .scroll-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--warm);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  .scroll-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--warm), transparent);
+    opacity: 0.2;
+    margin: 0;
+  }
+
+  /* SONIC BRIEF */
+  .sonic-brief {
+    background: #12100e;
+    padding: 5vh 6vw;
+    border-top: 1px solid rgba(200,169,110,0.1);
+    border-bottom: 1px solid rgba(200,169,110,0.1);
+  }
+
+  .sonic-brief-inner {
+    max-width: 900px;
+  }
+
+  .sonic-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--warm);
+    opacity: 0.6;
+    margin-bottom: 1rem;
+  }
+
+  .sonic-text {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--ghost);
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  /* LYRICS SECTION */
+  .lyrics-container {
+    padding: 8vh 6vw;
+    max-width: 860px;
+  }
+
+  .section-block {
+    margin-bottom: 6vh;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .section-block.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .section-tag-bracket {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    letter-spacing: 0.18em;
+    color: var(--warm);
+    text-transform: uppercase;
+  }
+
+  .section-tag-detail {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ash);
+    font-style: italic;
+  }
+
+  .tag-pip {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--rust);
+    opacity: 0.7;
+  }
+
+  .lyric-lines {
+    padding-left: 0;
+  }
+
+  .lyric-line {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.82rem, 1.6vw, 1rem);
+    line-height: 2;
+    color: var(--paper);
+    opacity: 0.88;
+    display: block;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  .lyric-line:hover {
+    opacity: 1;
+    color: #fff;
+  }
+
+  .lyric-line.adlib {
+    color: var(--ash);
+    font-style: italic;
+    font-size: 0.8em;
+    line-height: 1.4;
+    margin-left: 1.2rem;
+    margin-top: -0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .lyric-gap {
+    display: block;
+    height: 1.2rem;
+  }
+
+  /* HOOK — special treatment */
+  .section-block.is-hook .lyric-lines {
+    border-left: 2px solid var(--warm);
+    padding-left: 1.5rem;
+    margin-left: 0.5rem;
+  }
+
+  .section-block.is-hook .lyric-line {
+    color: var(--paper);
+    opacity: 0.95;
+    font-size: clamp(0.88rem, 1.7vw, 1.05rem);
+  }
+
+  /* BRIDGE — special treatment */
+  .section-block.is-bridge {
+    background: rgba(200,169,110,0.04);
+    border: 1px solid rgba(200,169,110,0.1);
+    padding: 2rem 2rem 2rem 2.5rem;
+    margin-left: -1rem;
+  }
+
+  .section-block.is-bridge .lyric-line {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.9;
+    color: var(--warm);
+    opacity: 0.9;
+  }
+
+  /* OUTRO */
+  .section-block.is-outro .lyric-line {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+    line-height: 2.1;
+    color: var(--ghost);
+    opacity: 0.8;
+  }
+
+  /* TRACK INFO BAR */
+  .track-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14,12,10,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,169,110,0.12);
+    padding: 0.9rem 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
+  }
+
+  .track-bar.show {
+    transform: translateY(0);
+  }
+
+  .track-bar-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+  }
+
+  .track-bar-meta {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    opacity: 0.6;
+  }
+
+  /* PROGRESS LINE */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--rust), var(--warm));
+    z-index: 9998;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* FOOTER */
+  .footer {
+    padding: 6vh 6vw 10vh;
+    border-top: 1px solid rgba(200,169,110,0.1);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    color: var(--warm);
+    opacity: 0.5;
+  }
+
+  .footer-credit {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ash);
+    line-height: 2;
+    text-align: right;
+  }
+
+  /* SIDE RULE */
+  .side-rule {
+    position: fixed;
+    left: 1.8vw;
+    top: 50%;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ash);
+    opacity: 0.3;
+    display: none;
+  }
+
+  @media (min-width: 1100px) {
+    .side-rule { display: block; }
+  }
+
+  /* SECTION COUNTER */
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    color: var(--rust);
+    opacity: 0.5;
+    letter-spacing: 0.15em;
+    margin-right: 0.6rem;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .hero { padding: 0 5vw 7vh; }
+    .lyrics-container { padding: 6vh 5vw; }
+    .section-block.is-bridge { margin-left: 0; padding: 1.5rem; }
+    .footer { flex-direction: column; }
+    .footer-credit { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="track-bar" id="trackBar">
+  <span class="track-bar-title">Concrete Beats Clever</span>
+  <span class="track-bar-meta">RyanrealAF · buildwhilebleeding.com</span>
+</div>
+
+<div class="side-rule">Concrete Beats Clever — RyanrealAF</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-alley-light"></div>
+
+  <p class="label">RyanrealAF / Build While Bleeding</p>
+
+  <h1 class="hero-title">
+    <span class="title-stroke">Concrete</span>
+    <span>Beats</span>
+    <span>Clever</span>
+  </h1>
+
+  <div class="hero-tagline">Less talk, more help — that's love right now.</div>
+
+  <div class="hero-byline">
+    <div class="hero-byline-line"></div>
+    <span class="hero-byline-text">Moody late-night boom-bap &nbsp;·&nbsp; Street romance &nbsp;·&nbsp; 87 BPM</span>
+  </div>
+
+  <div class="scroll-cue">
+    <div class="scroll-dot"></div>
+    <span class="scroll-text">Read the track</span>
+  </div>
+</section>
+
+<!-- SONIC BRIEF -->
+<div class="sonic-brief">
+  <div class="sonic-brief-inner">
+    <p class="sonic-label">Sonic Direction</p>
+    <p class="sonic-text">Moody, bouncy late-night boom-bap — low bass knock, cracked piano stabs, dusty drums, sharp front-facing rap vocals. Street romance with motion in the pocket.</p>
+  </div>
+</div>
+
+<!-- LYRICS -->
+<main class="lyrics-container">
+
+  <!-- INTRO -->
+  <div class="section-block" data-section="intro">
+    <div class="section-tag">
+      <span class="section-num">01</span>
+      <span class="section-tag-bracket">[ Intro ]</span>
+      <span class="tag-pip"></span>
+      <span class="section-tag-detail">Spoken, low &amp; smooth — cracked piano</span>
+    </div>
+    <div class="lyric-lines">
+      <span class="lyric-line">Back alley glow</span>
+      <span class="lyric-line adlib">(yeah)</span>
+      <span class="lyric-line">Gold on the grit</span>
+      <span class="lyric-line">You by the SUV</span>
+      <span class="lyric-line">I peeped the whole script</span>
+      <span class="lyric-line adlib">(look)</span>
+      <span class="lyric-line">Stayed one step back</span>
+      <span class="lyric-line">Leaned in your wave</span>
+      <span class="lyric-line">You cracked that silence</span>
+      <span class="lyric-line">I let it behave</span>
+    </div>
+  </div>
+
+  <!-- VERSE 1 -->
+  <div class="section-block" data-section="v1">
+    <div class="section-tag">
+      <span class="section-num">02</span>
+      <span class="section-tag-bracket">[ Verse 1 ]</span>
+      <span class="tag-pip"></span>
+      <span class="section-tag-detail">Bouncy percussive cadence — heavy measured pocket</span>
+    </div>
+    <div class="lyric-lines">
+      <span class="lyric-line">You by the hatchback, half-stacked, half-stressed</span>
+      <span class="lyric-line">Hands doing order while your head stay a mess</span>
+      <span class="lyric-line">Quick little moves, zip-zap, eyes on bright</span>
+      <span class="lyric-line">Like you trying line the whole world up right</span>
+      <span class="lyric-line">Then you start talking — easy, no force</span>
+      <span class="lyric-line">Voice got real glide, smooth in the course</span>
+      <span class="lyric-line adlib">(right)</span>
+      <span class="lyric-line">Ain't jump thirsty, ain't press, ain't pry</span>
+      <span class="lyric-line">Just caught your tempo and I rode that vibe</span>
+      <span class="lyric-gap"></span>
+      <span class="lyric-line">Rich-side alley but the air felt rough</span>
+      <span class="lyric-line">Pretty little backdrop, life still tough</span>
+      <span class="lyric-line">Fresh paint hiding all the pressure and cracks</span>
+      <span class="lyric-line">Soft light landing, hard weight on your back</span>
+      <span class="lyric-line">That beauty-plus-strain, that grace-plus-pain</span>
+      <span class="lyric-line">That pretty face carrying the whole damn frame</span>
+      <span class="lyric-line adlib">(mm)</span>
+      <span class="lyric-line">So I stayed chill, let the whole thing breathe</span>
+      <span class="lyric-line">Some moments hit sweeter when you don't overreach</span>
+    </div>
+  </div>
+
+  <!-- HOOK 1 -->
+  <div class="section-block is-hook" data-section="hook">
+    <div class="section-tag">
+      <span class="section-num">03</span>
+      <span class="section-tag-bracket">[ Hook ]</span>
+      <span class="tag-pip"></span>
+      <span class="section-tag-detail">Slow, intimate — direct echoing</span>
+    </div>
+    <div class="lyric-lines">
+      <span class="lyric-line">Less talk, more help, that's love right now</span>
+      <span class="lyric-line">Cold water in your hand, safe road out</span>
+      <span class="lyric-line">I don't need forever, I just hold this down</span>
+      <span class="lyric-line">Concrete beats clever when the lights fade out</span>
+      <span class="lyric-line">Less talk, more help, that's love right now</span>
+      <span class="lyric-line">No crowd, no noise, just a calm way out</span>
+      <span class="lyric-line">You don't gotta answer what we are somehow</span>
+      <span class="lyric-line">Just tell me what helps right now</span>
+    </div>
+  </div>
+
+  <!-- VERSE 2 -->
+  <div class="section-block" data-section="v2">
+    <div class="section-tag">
+      <span class="section-num">04</span>
+      <span class="section-tag-bracket">[ Verse 2 ]</span>
+      <span class="tag-pip"></span>
+      <span class="section-tag-detail">Bouncy playful cadence — relaxed pocket</span>
+    </div>
+    <div class="lyric-lines">
+      <span class="lyric-line">Then the day got live in a broke-folk way</span>
+      <span class="lyric-line">Curbside free piles lined up all day</span>
+      <span class="lyric-line adlib">(ayy)</span>
+      <span class="lyric-line">Bent-ass lamp and a side-table leg</span>
+      <span class="lyric-line">One milk crate, two blankets, something weird in a bag</span>
+      <span class="lyric-line">SUV stuffed, jam-packed, no slack</span>
+      <span class="lyric-line">Still you yelling, "hold up, I can fit that in the back"</span>
+      <span class="lyric-line">Whole block looking like — what the hell is this?</span>
+      <span class="lyric-line">You talking to a bookshelf like y'all got history and shit</span>
+      <span class="lyric-gap"></span>
+      <span class="lyric-line">And I can't lie, baby, you looked too good</span>
+      <span class="lyric-line">Wild little chaos in a rich folks hood</span>
+      <span class="lyric-line">From the outside view we looked half insane</span>
+      <span class="lyric-line">Two tired souls in a slapstick frame</span>
+      <span class="lyric-line adlib">(wait)</span>
+      <span class="lyric-line">Every odd little score, every curbside find</span>
+      <span class="lyric-line">Put a spark in your face and it eased your mind</span>
+      <span class="lyric-line">So I ain't rush nothing, I let you cook</span>
+      <span class="lyric-line">Let you chase little treasures with that hungry look</span>
+      <span class="lyric-gap"></span>
+      <span class="lyric-line">No sigh in my chest, no drag in my tone</span>
+      <span class="lyric-line">No "leave that there," no "come on, let's go"</span>
+      <span class="lyric-line">Cause every little find, every oddball score</span>
+      <span class="lyric-line">Put a spark in your face, had you laughing some more</span>
+      <span class="lyric-line">And if peace came dressed like a lamp with no shade</span>
+      <span class="lyric-line">Load that bitch up, let the whole block gaze</span>
+      <span class="lyric-line">If calm wore curb dust and a half-bent rack</span>
+      <span class="lyric-line">I'd pop that trunk and help slide it in back</span>
+    </div>
+  </div>
+
+  <!-- HOOK 2 -->
+  <div class="section-block is-hook" data-section="hook2">
+    <div class="section-tag">
+      <span class="section-num">05</span>
+      <span class="section-tag-bracket">[ Hook ]</span>
+    </div>
+    <div class="lyric-lines">
+      <span class="lyric-line">Less talk, more help, that's love right now</span>
+      <span class="lyric-line">Cold water in your hand, safe road out</span>
+      <span class="lyric-line">I don't need forever, I just hold this down</span>
+      <span class="lyric-line">Concrete beats clever when the lights fade out</span>
+      <span class="lyric-line">Less talk, more help, that's love right now</span>
+      <span class="lyric-line">No crowd, no noise, just a calm way out</span>
+      <span class="lyric-line">You don't gotta answer what we are somehow</span>
+      <span class="lyric-line">Just tell me what helps right now</span>
+    </div>
+  </div>
+
+  <!-- VERSE 3 -->
+  <div class="section-block" data-section="v3">
+    <div class="section-tag">
+      <span class="section-num">06</span>
+      <span class="section-tag-bracket">[ Verse 3 ]</span>
+      <span class="tag-pip"></span>
+      <span class="section-tag-detail">Intimate bounce as night falls — measured &amp; heavy</span>
+    </div>
+    <div class="lyric-lines">
+      <span class="lyric-line">Then the light dipped low, blue slid on gold</span>
+      <span class="lyric-line">Street got quiet, night got bold</span>
+      <span class="lyric-line adlib">(yeah)<
