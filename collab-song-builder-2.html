@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>You, me and this Cherokee</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cutive+Mono&display=swap');
+
+  :root {
+    --bg: #1a1410;
+    --bg2: #211a13;
+    --concrete: #2e2820;
+    --border: #3d3328;
+    --border-warm: #5a4832;
+    --amber: #d4922a;
+    --amber-dim: #8a5e18;
+    --amber-glow: rgba(212, 146, 42, 0.12);
+    --amber-glow2: rgba(212, 146, 42, 0.06);
+    --rust: #b5522a;
+    --her-rose: #c97b6a;
+    --her-rose-dim: #7a4038;
+    --her-glow: rgba(201, 123, 106, 0.1);
+    --text: #e8dcc8;
+    --text-mid: #b8a888;
+    --text-dim: #6e5e48;
+    --text-faint: #3d3020;
+    --scratch: rgba(232, 220, 200, 0.03);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg);
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 3px
+      ),
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(180,100,20,0.12) 0%, transparent 70%);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    mix-blend-mode: overlay;
+  }
+
+  /* Ambient glow top */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(180, 100, 20, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 20px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 56px 0 40px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber-dim), transparent);
+  }
+
+  .eyebrow {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 5px;
+    color: var(--amber-dim);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  .main-title {
+    font-family: 'Abril Fatface', cursive;
+    font-size: clamp(32px, 8vw, 52px);
+    line-height: 1.0;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 40px rgba(180,100,20,0.3);
+    margin-bottom: 6px;
+  }
+
+  .main-title .and {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.75em;
+    color: var(--text-mid);
+  }
+
+  .main-title .cherokee {
+    display: block;
+    color: var(--amber);
+  }
+
+  .tagline {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-track {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    padding: 0 8px;
+    gap: 0;
+  }
+
+  .progress-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .progress-step::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 55%;
+    width: 90%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-warm), var(--border));
+  }
+
+  .progress-step:last-child::after { display: none; }
+
+  .step-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cutive Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s ease;
+  }
+
+  .step-dot.ryan-dot { border-color: var(--amber-dim); color: var(--amber); }
+  .step-dot.her-dot  { border-color: var(--her-rose-dim); color: var(--her-rose); }
+
+  .step-dot.active {
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--amber-dim), 0 0 16px rgba(212,146,42,0.3);
+  }
+
+  .step-dot.active.her-active {
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--her-rose-dim), 0 0 16px rgba(201,123,106,0.3);
+  }
+
+  .step-dot.done {
+    background: var(--amber-dim);
+    border-color: var(--amber-dim);
+    color: var(--bg);
+    font-size: 11px;
+  }
+
+  .step-label {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+
+  .step-label.ryan-label { color: var(--amber-dim); }
+  .step-label.her-label  { color: var(--her-rose-dim); }
+
+  /* ── LOCKED VERSE CARDS ── */
+  .verse-card {
+    position: relative;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    animation: riseIn 0.5s ease;
+    overflow: hidden;
+  }
+
+  .verse-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; height: 2px;
+  }
+
+  .verse-card.ryan-card::before { background: linear-gradient(90deg, var(--amber), transparent); }
+  .verse-card.her-card::before  { background: linear-gradient(90deg, var(--her-rose), transparent); }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .author-tag {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid;
+  }
+
+  .ryan-tag {
+    color: var(--amber);
+    border-color: var(--amber-dim);
+    background: var(--amber-glow);
+  }
+
+  .her-tag {
+    color: var(--her-rose);
+    border-color: var(--her-rose-dim);
+    background: var(--her-glow);
+  }
+
+  .verse-num {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-left: auto;
+    letter-spacing: 2px;
+  }
+
+  .card-body { padding: 20px 24px 24px; }
+
+  .raw-label {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .raw-text {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .verse-label {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .ryan-card .verse-label { color: var(--amber-dim); }
+  .her-card  .verse-label { color: var(--her-rose-dim); }
+
+  .verse-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 17px;
+    line-height: 1.85;
+    color: var(--text);
+    white-space: pre-wrap;
+    letter-spacing: 0.1px;
+  }
+
+  /* ── INPUT SECTION ── */
+  .input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+    animation: riseIn 0.4s ease;
+  }
+
+  .input-section {
+    background: var(--bg2);
+    border: 1px solid var(--border-warm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .input-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+  }
+
+  .input-ryan::before { background: linear-gradient(90deg, var(--amber), transparent 60%); }
+  .input-her::before  { background: linear-gradient(90deg, var(--her-rose), transparent 60%); }
+
+  .input-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .whose-turn {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .whose-turn .ryan { color: var(--amber); }
+  .whose-turn .her  { color: var(--her-rose); }
+
+  .input-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    padding: 22px 24px;
+    min-height: 140px;
+    display: block;
+    caret-color: var(--amber);
+  }
+
+  textarea::placeholder {
+    color: var(--text-faint);
+    font-style: italic;
+    font-size: 15px;
+  }
+
+  textarea:disabled { opacity: 0.4; }
+
+  .input-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .footer-hint {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border: 1px solid;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn-amber {
+    border-color: var(--amber-dim);
+    color: var(--amber);
+  }
+
+  .btn-amber:hover:not(:disabled) {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--bg);
+    box-shadow: 0 0 20px rgba(212,146,42,0.3);
+  }
+
+  .btn-rose {
+    border-color: var(--her-rose-dim);
+    color: var(--her-rose);
+  }
+
+  .btn-rose:hover:not(:disabled) {
+    background: var(--her-rose);
+    border-color: var(--her-rose);
+    color: var(--bg);
+    box-shadow: 0 0 20px rgba(201,123,106,0.3);
+  }
+
+  .btn-full {
+    width: 100%;
+    padding: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* ── LOADING ── */
+  .loading-block {
+    padding: 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    animation: riseIn 0.3s ease;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-warm);
+    border-top-color: var(--amber);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ── OPTIONS PANEL ── */
+  .options-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border-warm);
+    margin-bottom: 16px;
+    animation: riseIn 0.45s ease;
+    overflow: hidden;
+  }
+
+  .options-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .options-badge {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    padding: 4px 10px;
+    border: 1px solid var(--amber-dim);
+    background: var(--amber-glow);
+  }
+
+  .options-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .option-item {
+    border-bottom: 1px solid var(--border);
+    padding: 22px 24px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-item:last-of-type { border-bottom: none; }
+
+  .option-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0;
+    transition: width 0.25s ease;
+  }
+
+  .option-item:hover { background: rgba(255,255,255,0.015); }
+
+  .option-item.selected {
+    background: var(--amber-glow2);
+  }
+
+  .option-item.selected::before {
+    width: 3px;
+    background: var(--amber);
+  }
+
+  .option-item.selected.her-selected {
+    background: rgba(201,123,106,0.05);
+  }
+
+  .option-item.selected.her-selected::before {
+    background: var(--her-rose);
+  }
+
+  .option-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .option-id {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .vibe-tag {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--amber);
+    letter-spacing: 0.3px;
+    margin-left: 8px;
+  }
+
+  .her-panel .vibe-tag { color: var(--her-rose); }
+
+  .select-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--border-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: transparent;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .option-item.selected .select-dot {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--bg);
+  }
+
+  .option-item.selected.her-selected .select-dot {
+    background: var(--her-rose);
+    border-color: var(--her-rose);
+  }
+
+  .option-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--text-mid);
+    white-space: pre-wrap;
+    transition: color 0.2s ease;
+  }
+
+  .option-item.selected .option-text { color: var(--text); }
+
+  .options-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-warm), transparent);
+  }
+
+  .divider-text {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* ── ANALYSIS ── */
+  .analysis-section {
+    background: var(--bg2);
+    border: 1px solid var(--border-warm);
+    margin-bottom: 16px;
+    animation: riseIn 0.5s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .analysis-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--amber), var(--her-rose), transparent);
+  }
+
+  .analysis-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .analysis-badge {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    padding: 5px 12px;
+    border: 1px solid var(--amber-dim);
+    background: var(--amber-glow);
+    display: inline-block;
+  }
+
+  .analysis-body { padding: 28px 24px; }
+
+  .analysis-block { margin-bottom: 32px; }
+  .analysis-block:last-child { margin-bottom: 0; }
+
+  .block-label {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .block-content {
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text-mid);
+  }
+
+  .hook-option {
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    background: rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hook-option::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--amber), transparent);
+  }
+
+  .hook-option:last-child { margin-bottom: 0; }
+
+  .hook-num {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber-dim);
+    margin-bottom: 10px;
+  }
+
+  .hook-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+  }
+
+  .hook-why {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .suno-block {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--amber);
+    padding: 16px;
+    border: 1px solid var(--amber-dim);
+    background: var(--amber-glow2);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── ERROR ── */
+  .error-msg {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rust);
+    padding: 14px 20px;
+    border: 1px solid rgba(181,82,42,0.3);
+    background: rgba(181,82,42,0.06);
+    margin-bottom: 16px;
+  }
+
+  /* ── RESET ── */
+  .reset-area {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-reset {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .btn-reset:hover {
+    color: var(--text-mid);
+    border-color: var(--border-warm);
+  }
+
+  .hidden { display: none !important; }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-warm); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="eyebrow">Build While Bleeding · a co-creation</div>
+    <h1 class="main-title">
+      You, me <span class="and">&amp;</span>
+      <span class="cherokee">this Cherokee</span>
+    </h1>
+    <p class="tagline">say it raw — the song finds what you mean</p>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-track">
+    <div class="progress-step">
+      <div class="step-dot ryan-dot active" id="dot0">R</div>
+      <div class="step-label ryan-label">V1</div>
+    </div>
+    <div class="progress-step">
+      <div class="step-dot her-dot" id="dot1">M</div>
+      <div class="step-label her-label">V2</div>
+    </div>
+    <div class="progress-step">
+      <div class="step-dot ryan-dot" id="dot2">R</div>
+      <div class="step-label ryan-label">V3</div>
+    </div>
+    <div class="progress-step">
+      <div class="step-dot her-dot" id="dot3">M</div>
+      <div class="step-label her-label">V4</div>
+    </div>
+    <div class="progress-step">
+      <div class="step-dot" id="dot4">✦</div>
+      <div class="step-label">Song</div>
+    </div>
+  </div>
+
+  <!-- Locked verses -->
+  <div id="versesContainer"></div>
+
+  <!-- Active input -->
+  <div id="inputSection">
+    <div class="input-section input-ryan" id="inputCard">
+      <div class="input-header">
+        <div class="whose-turn" id="turnLabel">Verse 1 — <span class="ryan">Ryan</span></div>
+        <div class="input-sub">feeling · memory · anything</div>
+      </div>
+      <textarea id="verseInput" rows="5" placeholder="Just say it. A feeling, a moment, something you saw. Don't try to make it a song — just say the thing…"></textarea>
+      <div class="input-footer">
+        <div class="footer-hint">raw input · AI builds the verse</div>
+        <button class="btn btn-amber" id="submitBtn" onclick="generateOptions()">Make It →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadingBlock" class="loading-block hidden">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingText">Writing three versions…</div>
+  </div>
+
+  <!-- Options -->
+  <div id="optionsPanel" class="options-panel hidden">
+    <div class="options-header">
+      <div class="options-badge">3 Options</div>
+      <div class="options-sub">tap the one that hits</div>
+    </div>
+    <div id="optionsList"></div>
+    <div class="options-footer">
+      <button class="btn btn-amber" id="lockBtn" onclick="lockVerse()" disabled>Lock It In →</button>
+    </div>
+  </div>
+
+  <div id="errorMsg" class="error-msg hidden"></div>
+
+  <!-- Final generate -->
+  <div id="generateArea" class="hidden">
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-text">All four verses locked</div>
+      <div class="divider-line"></div>
+    </div>
+    <button class="btn btn-amber btn-full" id="generateBtn" onclick="generateAnalysis()">
+      <span>✦</span><span>Find the song inside these verses</span>
+    </button>
+  </div>
+
+  <!-- Analysis -->
+  <div id="analysisSection" class="hidden">
+    <div class="analysis-section">
+      <div class="analysis-header"><div class="analysis-badge">Song Analysis</div></div>
+      <div class="analysis-body" id="analysisBody"></div>
+    </div>
+  </div>
+
+  <div class="reset-area" id="resetArea" style="display:none">
+    <button class="btn-reset" onclick="resetAll()">Start a New Song</button>
+  </div>
+
+</div>
+<script>
+const TURNS = [
+  { author:'Ryan',     cls:'ryan', btnCls:'btn-amber', cardCls:'input-ryan', panelCls:'', label:'Verse 1 — <span class="ryan">Ryan</span>', placeholder:"Just say it. A feeling, a moment, something you saw. Don't try to make it a song — just say the thing…" },
+  { author:'Brittany', cls:'her',  btnCls:'btn-rose',  cardCls:'input-her',  panelCls:'her-panel', label:'Verse 2 — <span class="her">Brittany</span>', placeholder:"Your turn. What's it making you think of? A memory, a feeling — anything real…" },
+  { author:'Ryan',     cls:'ryan', btnCls:'btn-amber', cardCls:'input-ryan', panelCls:'', label:'Verse 3 — <span class="ryan">Ryan</span>', placeholder:"Go deeper. Where does this go next? What hasn't been said yet…" },
+  { author:'Brittany', cls:'her',  btnCls:'btn-rose',  cardCls:'input-her',  panelCls:'her-panel', label:'Verse 4 — <span class="her">Brittany</span>', placeholder:"Bring it home. What's the truth underneath all of it…" },
+];
+
+let currentTurn = 0, verses = [], currentOptions = null, selectedOption = null;
+
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+
+function songContext() {
+  return verses.length ? verses.map((v,i)=>`[Verse ${i+1} — ${v.author}]\n${v.chosen}`).join('\n\n') : null;
+}
+
+async function generateOptions() {
+  const input = document.getElementById('verseInput');
+  const raw = input.value.trim();
+  if (!raw) return;
+  const t = TURNS[currentTurn];
+  input.disabled = true;
+  document.getElementById('submitBtn').disabled = true;
+  showLoading('Writing three versions…');
+  hideError();
+
+  const ctx = songContext();
+  const system = `You are a boom-bap lyricist and co-creator. You receive raw unstructured input — a feeling, a memory, a description, a fragment of thought — and transform it into three distinct verse options that fit naturally into the song already in progress. Each verse: 8–12 bars, strong delivery, internal rhymes, concrete imagery. No soft lines. No clichés. Ryan writes dominant, street-literate, philosophically sharp. Her verses carry emotional weight, warmth, unflinching honesty. Both voices are authentic, never performed. Return ONLY valid JSON, no markdown.`;
+
+  const prompt = `${!ctx ? 'This is the first verse — no prior verses.' : `Verses already written:\n\n${ctx}\n\nThis is verse ${currentTurn+1}.`}
+
+Author: ${t.author}
+Voice profile: ${t.author==='Ryan' ? 'dominant, street-literate, philosophically sharp — reads the world like a crime scene' : 'emotional weight, warmth, unflinching honesty — names the thing nobody else will'}
+
+Raw input (unstructured — just what they said):
+"${raw}"
+
+Write 3 distinct verse options. Each must:
+- Be 8–12 bars with line breaks (\\n between lines)
+- Flow from what's already been written
+- Use the raw input as emotional source — translate into vivid rhythmic language, don't paraphrase it
+- Have a clearly distinct angle from the other two
+
+Return exactly:
+{"options":[{"vibe":"2-3 word descriptor","text":"full verse with \\n line breaks"},{"vibe":"2-3 word descriptor","text":"full verse"},{"vibe":"2-3 word descriptor","text":"full verse"}]}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await resp.json();
+    const txt = data.content?.find(b=>b.type==='text')?.text||'';
+    const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    currentOptions = parsed.options;
+    selectedOption = null;
+    hideLoading();
+    renderOptions(t);
+  } catch(e) {
+    hideLoading();
+    input.disabled = false;
+    document.getElementById('submitBtn').disabled = false;
+    showError('Something broke. Try again.');
+  }
+}
+
+function renderOptions(t) {
+  const lockBtn = document.getElementById('lockBtn');
+  lockBtn.className = `btn ${t.btnCls}`;
+  lockBtn.disabled = true;
+  const panel = document.getElementById('optionsPanel');
+  panel.className = `options-panel ${t.panelCls}`;
+
+  document.getElementById('optionsList').innerHTML = currentOptions.map((o,i)=>`
+    <div class="option-item" id="opt${i}" onclick="selectOption(${i})">
+      <div class="option-meta">
+        <div><span class="option-id">Option ${i+1}</span><span class="vibe-tag">— ${esc(o.vibe)}</span></div>
+        <div class="select-dot" id="dot_opt${i}">✓</div>
+      </div>
+      <div class="option-text">${esc(o.text)}</div>
+    </div>`).join('');
+
+  panel.classList.remove('hidden');
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+}
+
+function selectOption(idx) {
+  const t = TURNS[currentTurn];
+  selectedOption = idx;
+  document.querySelectorAll('.option-item').forEach((el,i)=>{
+    el.classList.remove('selected','her-selected');
+    if(i===idx){ el.classList.add('selected'); if(t.cls==='her') el.classList.add('her-selected'); }
+  });
+  document.getElementById('lockBtn').disabled = false;
+}
+
+function lockVerse() {
+  if(selectedOption===null) return;
+  const t = TURNS[currentTurn];
+  const raw = document.getElementById('verseInput').value.trim();
+  const chosen = currentOptions[selectedOption].text;
+  verses.push({author:t.author,cls:t.cls,raw,chosen,num:currentTurn+1});
+  renderLockedVerse(verses[verses.length-1]);
+
+  document.getElementById('optionsPanel').classList.add('hidden');
+  const inp = document.getElementById('verseInput');
+  inp.value=''; inp.disabled=false;
+  document.getElementById('submitBtn').disabled=false;
+  selectedOption=null; currentOptions=null;
+  markDone(currentTurn);
+  currentTurn++;
+
+  if(currentTurn>=4){
+    document.getElementById('inputSection').classList.add('hidden');
+    document.getElementById('generateArea').classList.remove('hidden');
+    markDone(4);
+  } else {
+    setupInput(currentTurn);
+    activateDot(currentTurn);
+  }
+}
+
+function renderLockedVerse(v) {
+  const card = document.createElement('div');
+  card.className=`verse-card ${v.cls}-card`;
+  card.innerHTML=`
+    <div class="card-header">
+      <span class="author-tag ${v.cls}-tag">${v.author}</span>
+      <span class="verse-num">Verse ${v.num}</span>
+    </div>
+    <div class="card-body">
+      <div class="raw-label">Raw input</div>
+      <div class="raw-text">"${esc(v.raw)}"</div>
+      <div class="verse-label">Chosen verse</div>
+      <div class="verse-text">${esc(v.chosen)}</div>
+    </div>`;
+  document.getElementById('versesContainer').appendChild(card);
+}
+
+function setupInput(idx) {
+  const t = TURNS[idx];
+  document.getElementById('turnLabel').innerHTML = t.label;
+  document.getElementById('submitBtn').className = `btn ${t.btnCls}`;
+  document.getElementById('verseInput').placeholder = t.placeholder;
+  document.getElementById('lockBtn').className = `btn ${t.btnCls}`;
+  const card = document.getElementById('inputCard');
+  card.className = `input-section ${t.cardCls}`;
+}
+
+function activateDot(i) {
+  const d = document.getElementById(`dot${i}`);
+  if(!d) return;
+  d.classList.add('active');
+  if(TURNS[i]?.cls==='her') d.classList.add('her-active');
+}
+
+function markDone(i) {
+  const d = document.getElementById(`dot${i}`);
+  if(!d) return;
+  d.classList.remove('active','her-active','ryan-dot','her-dot');
+  d.classList.add('done');
+  d.textContent='✓';
+}
+
+function showLoading(msg) { document.getElementById('loadingText').textContent=msg; document.getElementById('loadingBlock').classList.remove('hidden'); }
+function hideLoading() { document.getElementById('loadingBlock').classList.add('hidden'); }
+function showError(msg) { const e=document.getElementById('errorMsg'); e.textContent=msg; e.classList.remove('hidden'); }
+function hideError() { document.getElementById('errorMsg').classList.add('hidden'); }
+
+async function generateAnalysis() {
+  const btn = document.getElementById('generateBtn');
+  btn.disabled=true;
+  btn.innerHTML='<div class="spinner"></div><span>Reading the full arc…</span>';
+  document.getElementById('analysisSection').classList.remove('hidden');
+
+  const block = verses.map(v=>`[Verse ${v.num} — ${v.author}]\n${v.chosen}`).join('\n\n');
+  const system = `You are a songwriting analyst and lyricist in the boom-bap tradition. Read four verses and extract the narrative arc, emotional center, thematic tension, then write three hook options earned by the verses. Return ONLY valid JSON, no markdown.`;
+  const prompt = `Four verses, two writers alternating. Return exactly:
+{"arc":"2-3 sentences on narrative and emotional journey","core_theme":"one sentence — the beating heart","tension":"the conflict or contrast alive in these verses","hooks":[{"label":"Hook A — [vibe]","text":"4-6 lines","why":"one sentence"},{"label":"Hook B — [vibe]","text":"4-6 lines different angle","why":"one sentence"},{"label":"Hook C — [vibe]","text":"4-6 lines bolder","why":"one sentence"}],"suno_style":"Complete Suno prompt: [genre] with [instruments] and [vocal identity]. Exclude [banned]. Mastering: [notes]. BPM: [number]"}
+
+Verses:
+${block}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await resp.json();
+    const txt = data.content?.find(b=>b.type==='text')?.text||'';
+    const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    renderAnalysis(parsed);
+    document.getElementById('resetArea').style.display='block';
+  } catch(e) {
+    document.getElementById('analysisSection').classList.add('hidden');
+    showError('Analysis failed. Try again.');
+    btn.disabled=false;
+    btn.innerHTML='<span>✦</span><span>Try again</span>';
+  }
+}
+
+function renderAnalysis(d) {
+  document.getElementById('analysisBody').innerHTML=`
+    <div class="analysis-block">
+      <div class="block-label">Narrative Arc</div>
+      <div class="block-content">${esc(d.arc)}</div>
+    </div>
+    <div class="analysis-block">
+      <div class="block-label">Core Theme</div>
+      <div class="block-content">${esc(d.core_theme)}</div>
+    </div>
+    <div class="analysis-block">
+      <div class="block-label">The Tension</div>
+      <div class="block-content">${esc(d.tension)}</div>
+    </div>
+    <div class="analysis-block">
+      <div class="block-label">Hook Options</div>
+      ${d.hooks.map(h=>`
+        <div class="hook-option">
+          <div class="hook-num">${esc(h.label)}</div>
+          <div class="hook-text">${esc(h.text)}</div>
+          <div class="hook-why">${esc(h.why)}</div>
+        </div>`).join('')}
+    </div>
+    <div class="analysis-block">
+      <div class="block-label">Suno Style Prompt</div>
+      <div class="suno-block">${esc(d.suno_style)}</div>
+    </div>`;
+}
+
+function resetAll() {
+  currentTurn=0; verses=[]; currentOptions=null; selectedOption=null;
+  document.getElementById('versesContainer').innerHTML='';
+  ['inputSection','generateArea','analysisSection','optionsPanel','loadingBlock'].forEach(id=>document.getElementById(id).classList[id==='inputSection'?'remove':'add']('hidden'));
+  document.getElementById('resetArea').style.display='none';
+  const inp=document.getElementById('verseInput'); inp.value=''; inp.disabled=false;
+  document.getElementById('submitBtn').disabled=false;
+  document.getElementById('generateBtn').disabled=false;
+  document.getElementById('generateBtn').innerHTML='<span>✦</span><span>Find the song inside these verses</span>';
+  hideError(); setupInput(0);
+  for(let i=0;i<5;i++){
+    const d=document.getElementById(`dot${i}`);
+    d.classList.remove('done','active','her-active');
+    if(i<4){ d.classList.add(i%2===0?'ryan-dot':'her-dot'); d.textContent=i%2===0?'R':'M'; }
+    else d.textContent='✦';
+  }
+  document.getElementById('dot0').classList.add('active');
+}
+</script>
+</body>
+</html>
